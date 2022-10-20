@@ -26,14 +26,14 @@ internal class Program {
   private static void showData() {
     ConsoleExtras.WriteWarning("Mostrando os dados coletados [Azul = Pessoa; Ciano = Estudante]...\n");
 
-    foreach (var item in _persons) {
-      if (item.GetType().IsAssignableTo(typeof(Student))) {
-        ConsoleExtras.WriteStudent(item);
+    _persons.ForEach(person => {
+      if (person.GetType().IsAssignableTo(typeof(Student))) {
+        ConsoleExtras.WriteStudent(person);
       }
       else {
-        ConsoleExtras.WritePerson(item);
+        ConsoleExtras.WritePerson(person);
       }
-    }
+    });
 
     ConsoleExtras.WriteSuccess("Finalizado...");
   }
@@ -102,7 +102,7 @@ internal class Program {
 
     try {
       if (!File.Exists(_filePath)) {
-        ConsoleExtras.WriteWarning($"Arquivo '{path}' não encontrado... Baixando ele do GitHub...");
+        ConsoleExtras.WriteWarning($"O arquivo '{path}' não encontrado... Baixando do GitHub...");
 
         using var httpClient = new HttpClient();
         var result = httpClient.GetAsync(_fileUri).GetAwaiter().GetResult();
@@ -111,7 +111,6 @@ internal class Program {
         using var streamWriter = new StreamWriter(_filePath);
         streamWriter.Write(content);
         streamWriter.Close();
-        streamWriter.Dispose();
       }
 
       using var streamReader = new StreamReader(_filePath);
@@ -124,7 +123,6 @@ internal class Program {
         .ToArray();
 
       streamReader.Close();
-      streamReader.Dispose();
 
       ConsoleExtras.WriteSuccess("Finalizado...");
     }

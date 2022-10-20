@@ -21,7 +21,9 @@ public class Person {
 
   public override string ToString()
     => new StringBuilder()
-      .AppendLine($"{{ Nome: {Name}, Telefone: {PhoneNumber}, Cidade: {City},")
-      .AppendLine($"   RG: {Rg}, CPF: {Cpf} }}")
+      .AppendLine("{")
+      .AppendLine($"\tNome: {Name}, Telefone: {PhoneNumber}, Cidade: {City},")
+      .AppendLine($"\tRG: {Rg}, CPF: {Cpf}")
+      .AppendLine("}")
       .ToString();
 }

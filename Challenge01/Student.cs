@@ -28,8 +28,10 @@ public class Student : Person {
 
   public override string ToString()
     => new StringBuilder()
-      .AppendLine($"{{ Nome: {Name}, Telefone: {PhoneNumber}, Cidade: {City},")
-      .AppendLine($"   RG: {Rg}, CPF: {Cpf}, Matrícula: {Enrollment}")
-      .AppendLine($"   Código do curso: {CourseCode}, Nome do curso: {CourseName} }}")
+      .AppendLine("{")
+      .AppendLine($"\tNome: {Name}, Telefone: {PhoneNumber}, Cidade: {City},")
+      .AppendLine($"\tRG: {Rg}, CPF: {Cpf}, Matrícula: {Enrollment},")
+      .AppendLine($"\tCódigo do curso: {CourseCode}, Nome do curso: {CourseName}")
+      .AppendLine("}")
       .ToString();
 }
