@@ -1,9 +1,8 @@
 # Atos Academy
 
-Conteúdo aprendido na Academia .NET da Atos junto da UFN.
+Desafio feito em 20/10/2022.
 
-## Exercícios
+## Captura de tela
 
-Vários exercícios foram desenvolvidos em aula, observe a lista de
-exercícios [aqui](https://github.com/alexandrezamberlan/academiaDotNet_3/tree/main/2%20-%20exerciciosDesafios).
+![Screenshot](./Assets/screenshot.png)
 
