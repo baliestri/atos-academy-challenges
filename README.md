@@ -1,8 +1,6 @@
 # Atos Academy
 
-Desafio feito em 20/10/2022.
+## Desafio 01 - 20/10/2022
 
-## Captura de tela
-
-![Screenshot](./Assets/screenshot.png)
+![Challenge 01](./Assets/challenge-01.png)
 
