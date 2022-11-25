@@ -10,3 +10,11 @@
 
 > É necessário configurar os `User Secrets` do projeto (Projeto -> Gerenciar Segredos de Usuário)
 > Adicione a seguinte linha `"ConnectionStrings:MSSQL": "Server=localhost; Database=MiniERP; User Id=sa; Password=yourStrong(!)Password; Trusted_Connection=True;"` configurando de acordo com o seu SGBD
+
+## Desafio 02.1 - 25/11/2022
+
+> Troquei para o EFCore, ainda está imperfeito como antes, porém funcionando igual.
+
+> Considerei fazer um projeto novo, mas vou deixar de lado e focar em outros estudos para o desafio final.
+> Não há seeding, talvez quebre caso não tenha uma categoria antes de um produto e por aí vai.
+
