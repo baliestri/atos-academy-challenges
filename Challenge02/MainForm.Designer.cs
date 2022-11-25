@@ -28,12 +28,14 @@ partial class MainForm {
   /// </summary>
   private void InitializeComponent() {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnAddProduct = new System.Windows.Forms.Button();
             this.btnCreateShipper = new System.Windows.Forms.Button();
             this.btnCreateSupplier = new System.Windows.Forms.Button();
             this.btnCreateOrder = new System.Windows.Forms.Button();
             this.btnCreateCustomer = new System.Windows.Forms.Button();
             this.btnCreateCategory = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnEditProduct = new System.Windows.Forms.Button();
             this.btnEditShipper = new System.Windows.Forms.Button();
             this.btnEditorSupplier = new System.Windows.Forms.Button();
             this.btnEditCategory = new System.Windows.Forms.Button();
@@ -46,6 +48,7 @@ partial class MainForm {
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnAddProduct);
             this.groupBox1.Controls.Add(this.btnCreateShipper);
             this.groupBox1.Controls.Add(this.btnCreateSupplier);
             this.groupBox1.Controls.Add(this.btnCreateOrder);
@@ -58,9 +61,19 @@ partial class MainForm {
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Criar";
             // 
+            // btnAddProduct
+            // 
+            this.btnAddProduct.Location = new System.Drawing.Point(168, 51);
+            this.btnAddProduct.Name = "btnAddProduct";
+            this.btnAddProduct.Size = new System.Drawing.Size(75, 23);
+            this.btnAddProduct.TabIndex = 5;
+            this.btnAddProduct.Text = "Produto";
+            this.btnAddProduct.UseVisualStyleBackColor = true;
+            this.btnAddProduct.Click += new System.EventHandler(this.btnAddProduct_Click);
+            // 
             // btnCreateShipper
             // 
-            this.btnCreateShipper.Location = new System.Drawing.Point(125, 51);
+            this.btnCreateShipper.Location = new System.Drawing.Point(87, 51);
             this.btnCreateShipper.Name = "btnCreateShipper";
             this.btnCreateShipper.Size = new System.Drawing.Size(75, 23);
             this.btnCreateShipper.TabIndex = 4;
@@ -70,7 +83,7 @@ partial class MainForm {
             // 
             // btnCreateSupplier
             // 
-            this.btnCreateSupplier.Location = new System.Drawing.Point(44, 51);
+            this.btnCreateSupplier.Location = new System.Drawing.Point(6, 51);
             this.btnCreateSupplier.Name = "btnCreateSupplier";
             this.btnCreateSupplier.Size = new System.Drawing.Size(75, 23);
             this.btnCreateSupplier.TabIndex = 3;
@@ -110,20 +123,31 @@ partial class MainForm {
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnEditProduct);
             this.groupBox2.Controls.Add(this.btnEditShipper);
             this.groupBox2.Controls.Add(this.btnEditorSupplier);
             this.groupBox2.Controls.Add(this.btnEditCategory);
             this.groupBox2.Controls.Add(this.btnEditCustomer);
             this.groupBox2.Location = new System.Drawing.Point(267, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(205, 83);
+            this.groupBox2.Size = new System.Drawing.Size(254, 83);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Editar";
             // 
+            // btnEditProduct
+            // 
+            this.btnEditProduct.Location = new System.Drawing.Point(127, 51);
+            this.btnEditProduct.Name = "btnEditProduct";
+            this.btnEditProduct.Size = new System.Drawing.Size(75, 23);
+            this.btnEditProduct.TabIndex = 9;
+            this.btnEditProduct.Text = "Produto";
+            this.btnEditProduct.UseVisualStyleBackColor = true;
+            this.btnEditProduct.Click += new System.EventHandler(this.btnEditProduct_Click);
+            // 
             // btnEditShipper
             // 
-            this.btnEditShipper.Location = new System.Drawing.Point(125, 51);
+            this.btnEditShipper.Location = new System.Drawing.Point(168, 22);
             this.btnEditShipper.Name = "btnEditShipper";
             this.btnEditShipper.Size = new System.Drawing.Size(75, 23);
             this.btnEditShipper.TabIndex = 8;
@@ -133,7 +157,7 @@ partial class MainForm {
             // 
             // btnEditorSupplier
             // 
-            this.btnEditorSupplier.Location = new System.Drawing.Point(44, 51);
+            this.btnEditorSupplier.Location = new System.Drawing.Point(46, 51);
             this.btnEditorSupplier.Name = "btnEditorSupplier";
             this.btnEditorSupplier.Size = new System.Drawing.Size(75, 23);
             this.btnEditorSupplier.TabIndex = 7;
@@ -175,7 +199,7 @@ partial class MainForm {
             // 
             this.btnEmit.Location = new System.Drawing.Point(267, 101);
             this.btnEmit.Name = "btnEmit";
-            this.btnEmit.Size = new System.Drawing.Size(205, 23);
+            this.btnEmit.Size = new System.Drawing.Size(254, 23);
             this.btnEmit.TabIndex = 3;
             this.btnEmit.Text = "Emitir NF-e";
             this.btnEmit.UseVisualStyleBackColor = true;
@@ -185,7 +209,7 @@ partial class MainForm {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(483, 134);
+            this.ClientSize = new System.Drawing.Size(533, 134);
             this.Controls.Add(this.btnEmit);
             this.Controls.Add(this.btnQuery);
             this.Controls.Add(this.groupBox2);
@@ -216,4 +240,6 @@ partial class MainForm {
   private Button btnEditCustomer;
   private Button btnQuery;
   private Button btnEmit;
+  private Button btnAddProduct;
+  private Button btnEditProduct;
 }

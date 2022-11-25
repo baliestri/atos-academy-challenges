@@ -1,4 +1,4 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using Challenge02.Database;
@@ -7,14 +7,14 @@ using Microsoft.Extensions.Logging;
 namespace Challenge02.Forms;
 
 public partial class EditCustomerForm : Form {
-  private readonly DatabaseContext _databaseContext;
+  private readonly AppDbContext _appDbContext;
   private readonly ILogger<EditCustomerForm> _logger;
 
-  public EditCustomerForm(ILogger<EditCustomerForm> logger, DatabaseContext databaseContext) {
+  public EditCustomerForm(ILogger<EditCustomerForm> logger, AppDbContext appDbContext) {
     InitializeComponent();
 
     _logger = logger;
-    _databaseContext = databaseContext;
+    _appDbContext = appDbContext;
   }
 
   private void btnCancel_Click(object sender, EventArgs e) {
@@ -25,8 +25,10 @@ public partial class EditCustomerForm : Form {
   private void btnEdit_Click(object sender, EventArgs e) {
     if (string.IsNullOrWhiteSpace(txtFullName.Text)) {
       _logger.LogWarning("Fullname is empty");
-      MessageBox.Show("O campo 'nome completo' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
-        MessageBoxIcon.Error);
+      MessageBox.Show(
+        "O campo 'nome completo' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
+        MessageBoxIcon.Error
+      );
       return;
     }
 
@@ -34,8 +36,10 @@ public partial class EditCustomerForm : Form {
 
     if (split.Length < 2) {
       _logger.LogWarning("Fullname is invalid");
-      MessageBox.Show("O campo 'nome completo' deve conter o primeiro e o último nome.", "Erro", MessageBoxButtons.OK,
-        MessageBoxIcon.Error);
+      MessageBox.Show(
+        "O campo 'nome completo' deve conter o primeiro e o último nome.", "Erro", MessageBoxButtons.OK,
+        MessageBoxIcon.Error
+      );
       return;
     }
 
@@ -72,15 +76,15 @@ public partial class EditCustomerForm : Form {
       return;
     }
 
-    if (_databaseContext.Customers
-        .Except(_databaseContext.Customers.Where(x => x.FullName == cbCustomer.SelectedItem.ToString()))
+    if (_appDbContext.Customers
+        .Except(_appDbContext.Customers.Where(x => x.FullName == cbCustomer.SelectedItem.ToString()))
         .Any(x => x.Email == txtEmail.Text)) {
       _logger.LogWarning("Email already exists");
       MessageBox.Show("O email informado já está cadastrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
       return;
     }
 
-    var customer = _databaseContext.Customers.First(x => x.FullName == cbCustomer.SelectedItem.ToString());
+    var customer = _appDbContext.Customers.First(x => x.FullName == cbCustomer.SelectedItem.ToString());
 
     customer.FirstName = firstName;
     customer.LastName = lastName;
@@ -93,7 +97,8 @@ public partial class EditCustomerForm : Form {
 
     try {
       _logger.LogInformation("Editing customer");
-      _databaseContext.Customers.AddAndSave(customer);
+      _appDbContext.Customers.Update(customer);
+      _appDbContext.SaveChanges();
       MessageBox.Show("Cliente editado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
       txtFullName.Clear();
@@ -111,14 +116,14 @@ public partial class EditCustomerForm : Form {
     }
 
     _logger.LogInformation("Customer edited");
-    cbCustomer.DataSource = _databaseContext.Customers.Select(x => x.FullName).ToList();
+    cbCustomer.DataSource = _appDbContext.Customers.Select(x => x.FullName).ToList();
   }
 
   private void EditCustomerForm_Load(object sender, EventArgs e) =>
-    cbCustomer.DataSource = _databaseContext.Customers.Select(x => x.FullName).ToList();
+    cbCustomer.DataSource = _appDbContext.Customers.Select(x => x.FullName).ToList();
 
   private void cbCustomer_SelectedIndexChanged(object sender, EventArgs e) {
-    var category = _databaseContext.Customers.First(x => x.FullName == cbCustomer.SelectedItem.ToString());
+    var category = _appDbContext.Customers.First(x => x.FullName == cbCustomer.SelectedItem.ToString());
 
     txtFullName.Text = cbCustomer.SelectedItem.ToString();
     txtAddress.Text = category.Address;

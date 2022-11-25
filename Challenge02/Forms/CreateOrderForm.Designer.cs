@@ -75,6 +75,7 @@ partial class CreateOrderForm {
             this.cbCustomer.Name = "cbCustomer";
             this.cbCustomer.Size = new System.Drawing.Size(359, 23);
             this.cbCustomer.TabIndex = 3;
+            this.cbCustomer.SelectedIndexChanged += new System.EventHandler(this.cbCustomer_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -118,6 +119,7 @@ partial class CreateOrderForm {
             this.cbShipper.Name = "cbShipper";
             this.cbShipper.Size = new System.Drawing.Size(359, 23);
             this.cbShipper.TabIndex = 9;
+            this.cbShipper.SelectedIndexChanged += new System.EventHandler(this.cbShipper_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -162,6 +164,7 @@ partial class CreateOrderForm {
             this.cbProduct.Name = "cbProduct";
             this.cbProduct.Size = new System.Drawing.Size(359, 23);
             this.cbProduct.TabIndex = 15;
+            this.cbProduct.SelectedIndexChanged += new System.EventHandler(this.cbProduct_SelectedIndexChanged);
             // 
             // label7
             // 

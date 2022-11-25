@@ -1,32 +1,34 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using Challenge02.Forms;
-using Microsoft.Extensions.Logging;
 
 namespace Challenge02;
 
 public partial class MainForm : Form {
-  private readonly ILogger<MainForm> _logger;
-  private readonly QueryForm _queryForm;
   private readonly CreateCategoryForm _createCategory;
-  private readonly EditCategoryForm _editCategory;
   private readonly CreateCustomerForm _createCustomer;
-  private readonly EditCustomerForm _editCustomer;
-  private readonly CreateSupplierForm _createSupplier;
-  private readonly EditSupplierForm _editSupplier;
-  private readonly CreateShipperForm _createShipper;
-  private readonly EditShipperForm _editShipper;
   private readonly CreateOrderForm _createOrder;
+  private readonly CreateProductForm _createProduct;
+  private readonly CreateShipperForm _createShipper;
+  private readonly CreateSupplierForm _createSupplier;
+  private readonly EditCategoryForm _editCategory;
+  private readonly EditCustomerForm _editCustomer;
+  private readonly EditProductForm _editProduct;
+  private readonly EditShipperForm _editShipper;
+  private readonly EditSupplierForm _editSupplier;
   private readonly EmitInvoiceForm _emitInvoice;
+  private readonly QueryForm _queryForm;
 
-  public MainForm(ILogger<MainForm> logger, QueryForm queryForm, CreateCategoryForm createCategory,
+  public MainForm(
+    QueryForm queryForm, CreateCategoryForm createCategory,
     EditCategoryForm editCategory, CreateCustomerForm createCustomer, EditCustomerForm editCustomer,
     CreateSupplierForm createSupplier, EditSupplierForm editSupplier, CreateShipperForm createShipper,
-    EditShipperForm editShipper, CreateOrderForm createOrder, EmitInvoiceForm emitInvoice) {
+    EditShipperForm editShipper, CreateOrderForm createOrder, EmitInvoiceForm emitInvoice,
+    CreateProductForm createProduct, EditProductForm editProduct
+  ) {
     InitializeComponent();
 
-    _logger = logger;
     _queryForm = queryForm;
     _createCategory = createCategory;
     _editCategory = editCategory;
@@ -38,6 +40,8 @@ public partial class MainForm : Form {
     _editShipper = editShipper;
     _createOrder = createOrder;
     _emitInvoice = emitInvoice;
+    _createProduct = createProduct;
+    _editProduct = editProduct;
   }
 
   private void btnCreateCategory_Click(object sender, EventArgs e)
@@ -72,4 +76,10 @@ public partial class MainForm : Form {
 
   private void btnEmit_Click(object sender, EventArgs e)
     => _emitInvoice.ShowDialog();
+
+  private void btnAddProduct_Click(object sender, EventArgs e)
+    => _createProduct.ShowDialog();
+
+  private void btnEditProduct_Click(object sender, EventArgs e)
+    => _editProduct.ShowDialog();
 }

@@ -1,23 +1,23 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using System.Resources;
 using Challenge02.Database;
-using Challenge02.Entities;
+using Challenge02.Database.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Challenge02.Forms;
 
 public partial class CreateShipperForm : Form {
+  private readonly AppDbContext _appDbContext;
   private readonly ILogger<CreateShipperForm> _logger;
-  private readonly DatabaseContext _databaseContext;
   private readonly ResourceManager _resourceManager;
 
-  public CreateShipperForm(ILogger<CreateShipperForm> logger, DatabaseContext databaseContext) {
+  public CreateShipperForm(ILogger<CreateShipperForm> logger, AppDbContext appDbContext) {
     InitializeComponent();
 
     _logger = logger;
-    _databaseContext = databaseContext;
+    _appDbContext = appDbContext;
     _resourceManager = new ResourceManager(typeof(CreateShipperForm));
   }
 
@@ -30,15 +30,19 @@ public partial class CreateShipperForm : Form {
     _logger.LogInformation("Creating shipper");
     if (string.IsNullOrWhiteSpace(txtName.Text)) {
       _logger.LogWarning("Name is empty");
-      MessageBox.Show(_resourceManager.GetString("NAME_REQUIRED_ERROR"), _resourceManager.GetString("ERROR_TITLE"),
-        MessageBoxButtons.OK, MessageBoxIcon.Error);
+      MessageBox.Show(
+        _resourceManager.GetString("NAME_REQUIRED_ERROR"), _resourceManager.GetString("ERROR_TITLE"),
+        MessageBoxButtons.OK, MessageBoxIcon.Error
+      );
       return;
     }
 
-    if (_databaseContext.Shippers.Any(c => c.CompanyName == txtName.Text)) {
+    if (_appDbContext.Shippers.Any(c => c.CompanyName == txtName.Text)) {
       _logger.LogWarning("Category already exists");
-      MessageBox.Show(_resourceManager.GetString("DUPLICATE_NAME_ERROR"), _resourceManager.GetString("ERROR_TITLE"),
-        MessageBoxButtons.OK, MessageBoxIcon.Error);
+      MessageBox.Show(
+        _resourceManager.GetString("DUPLICATE_NAME_ERROR"), _resourceManager.GetString("ERROR_TITLE"),
+        MessageBoxButtons.OK, MessageBoxIcon.Error
+      );
       return;
     }
 
@@ -50,7 +54,8 @@ public partial class CreateShipperForm : Form {
 
     var shipper = new Shipper { CompanyName = txtName.Text, Phone = txtPhone.Text };
 
-    _databaseContext.Shippers.AddAndSave(shipper);
+    _appDbContext.Shippers.Add(shipper);
+    _appDbContext.SaveChanges();
     _logger.LogInformation("Shipper created");
   }
 }

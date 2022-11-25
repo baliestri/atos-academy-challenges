@@ -1,4 +1,4 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using System.Reflection;
@@ -9,21 +9,21 @@ using SelectPdf;
 namespace Challenge02.Forms;
 
 public partial class EmitInvoiceForm : Form {
+  private readonly AppDbContext _appDbContext;
   private readonly ILogger<EmitInvoiceForm> _logger;
-  private readonly DatabaseContext _databaseContext;
 
-  public EmitInvoiceForm(ILogger<EmitInvoiceForm> logger, DatabaseContext databaseContext) {
+  public EmitInvoiceForm(ILogger<EmitInvoiceForm> logger, AppDbContext appDbContext) {
     InitializeComponent();
     _logger = logger;
-    _databaseContext = databaseContext;
+    _appDbContext = appDbContext;
   }
 
   private void EmitInvoiceForm_Load(object sender, EventArgs e) {
-    cbCustomers.DataSource = _databaseContext.Customers.Select(c => c.FullName).ToList();
+    cbCustomers.DataSource = _appDbContext.Customers.Select(c => c.FullName).ToList();
 
     listView.Columns.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Produto" }, new ColumnHeader { Text = "Preço total" },
       new ColumnHeader { Text = "Quantidade" }, new ColumnHeader { Text = "Cliente" },
       new ColumnHeader { Text = "Data do pedido" }, new ColumnHeader { Text = "Data do envio" },
@@ -42,12 +42,12 @@ public partial class EmitInvoiceForm : Form {
     using var reader = new StreamReader(stream!);
     var html = reader.ReadToEnd();
 
-    var order = _databaseContext.Orders.First(o => o.Customer.FullName == cbCustomers.SelectedItem.ToString());
-    var orderDetail = _databaseContext.OrderDetails.First(od => od.OrderId == order.Id);
-    var payment = _databaseContext.Payments.First(p => p.CustomerId == order.CustomerId);
+    var order = _appDbContext.Orders.ToList().First(o => o.Customer.FullName == cbCustomers.SelectedItem.ToString());
+    var orderDetail = _appDbContext.OrderDetails.ToList().First(od => od.Order.Id == order.Id);
+    var payment = _appDbContext.Payments.ToList().First(p => p.Customer.Id == order.Customer.Id);
 
     html = html.Replace("{{nfeId}}", nfeId.ToString());
-    html = html.Replace("{{customerId}}", order.CustomerId.ToString());
+    html = html.Replace("{{customerId}}", order.Customer.Id.ToString());
     html = html.Replace("{{customerFullName}}", order.Customer.FullName);
     html = html.Replace("{{paymentDate}}", payment.PaymentDate.ToString());
     html = html.Replace("{{orderDate}}", order.OrderDate.ToString());
@@ -74,15 +74,15 @@ public partial class EmitInvoiceForm : Form {
   }
 
   private void cbCustomers_SelectedIndexChanged(object sender, EventArgs e) {
-    var orders = _databaseContext.Orders.Where(o => o.Customer.FullName == cbCustomers.SelectedItem.ToString());
+    var orders = _appDbContext.Orders.ToList().Where(o => o.Customer.FullName == cbCustomers.SelectedItem.ToString());
 
     listView.Items.Clear();
 
     foreach (var order in orders) {
-      var orderDetail = _databaseContext.OrderDetails.First(od => od.OrderId == order.Id);
-      var payment = _databaseContext.Payments.First(p => p.CustomerId == order.CustomerId);
-      var product = _databaseContext.Products.First(p => p.Id == orderDetail.ProductId);
-      var shipper = _databaseContext.Shippers.First(s => s.Id == order.ShipperId);
+      var orderDetail = _appDbContext.OrderDetails.ToList().First(od => od.Order.Id == order.Id);
+      var payment = _appDbContext.Payments.ToList().First(p => p.Customer.Id == order.Customer.Id);
+      var product = _appDbContext.Products.ToList().First(p => p.Id == orderDetail.Product.Id);
+      var shipper = _appDbContext.Shippers.ToList().First(s => s.Id == order.Shipper.Id);
 
       var item = new ListViewItem(product.Name);
       item.SubItems.Add(orderDetail.TotalPrice.ToString());

@@ -1,9 +1,9 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using System.Text;
 
-namespace Challenge02.Entities;
+namespace Challenge02.Database.Entities;
 
 public class Entity {
   public Guid Id { get; set; } = Guid.NewGuid();

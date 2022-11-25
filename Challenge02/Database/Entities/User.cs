@@ -1,9 +1,9 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using Challenge02.Attributes;
 
-namespace Challenge02.Entities;
+namespace Challenge02.Database.Entities;
 
 public sealed class User : Entity {
   public string FirstName { get; set; } = null!;

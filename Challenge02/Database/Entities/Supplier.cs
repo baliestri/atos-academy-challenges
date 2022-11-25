@@ -1,11 +1,9 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using Challenge02.Attributes;
-using Challenge02.Database;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Challenge02.Entities;
+namespace Challenge02.Database.Entities;
 
 public sealed class Supplier : Entity {
   public string CompanyName { get; set; } = null!;
@@ -24,6 +22,5 @@ public sealed class Supplier : Entity {
   public int PaymentMethod { get; set; }
 
   [SkipProperty]
-  public IEnumerable<Product> Products
-    => Program.Services.GetRequiredService<DatabaseContext>().Products.Where(x => x.SupplierId == Id);
+  public IEnumerable<Product> Products { get; set; } = null!;
 }

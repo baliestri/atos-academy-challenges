@@ -1,4 +1,4 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using Challenge02.Database;
@@ -7,14 +7,14 @@ using Microsoft.Extensions.Logging;
 namespace Challenge02.Forms;
 
 public partial class QueryForm : Form {
+  private readonly AppDbContext _appDbContext;
   private readonly ILogger<QueryForm> _logger;
-  private readonly DatabaseContext _databaseContext;
 
-  public QueryForm(ILogger<QueryForm> logger, DatabaseContext databaseContext) {
+  public QueryForm(ILogger<QueryForm> logger, AppDbContext appDbContext) {
     InitializeComponent();
 
     _logger = logger;
-    _databaseContext = databaseContext;
+    _appDbContext = appDbContext;
   }
 
   private void cbTable_SelectedIndexChanged(object sender, EventArgs e) {
@@ -64,21 +64,23 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Nome" }, new ColumnHeader { Text = "Descrição" },
       new ColumnHeader { Text = "Produtos" }
     };
-    var categories = _databaseContext.Categories;
+    var categories = _appDbContext.Categories.ToList();
 
     listView.Columns.AddRange(columns);
 
-    categories.ForEach(category => {
-      var item = new ListViewItem(category.Name);
-      item.SubItems.Add(category.Description);
-      item.SubItems.Add(category.Products.Count().ToString());
+    categories.ForEach(
+      category => {
+        var item = new ListViewItem(category.Name);
+        item.SubItems.Add(category.Description);
+        item.SubItems.Add(category.Products is not null ? category.Products.Count().ToString() : "0");
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }
@@ -89,27 +91,29 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Nome completo" }, new ColumnHeader { Text = "Endereço" },
       new ColumnHeader { Text = "Cidade" }, new ColumnHeader { Text = "Estado" }, new ColumnHeader { Text = "CEP" },
       new ColumnHeader { Text = "Telefone" }, new ColumnHeader { Text = "Email" }, new ColumnHeader { Text = "Pedidos" }
     };
-    var customers = _databaseContext.Customers;
+    var customers = _appDbContext.Customers.ToList();
 
     listView.Columns.AddRange(columns);
 
-    customers.ForEach(customer => {
-      var item = new ListViewItem(customer.FullName);
-      item.SubItems.Add(customer.Address);
-      item.SubItems.Add(customer.City);
-      item.SubItems.Add(customer.State);
-      item.SubItems.Add(customer.Zip);
-      item.SubItems.Add(customer.Phone);
-      item.SubItems.Add(customer.Email);
-      item.SubItems.Add(customer.Orders.Count().ToString());
+    customers.ForEach(
+      customer => {
+        var item = new ListViewItem(customer.FullName);
+        item.SubItems.Add(customer.Address);
+        item.SubItems.Add(customer.City);
+        item.SubItems.Add(customer.State);
+        item.SubItems.Add(customer.Zip);
+        item.SubItems.Add(customer.Phone);
+        item.SubItems.Add(customer.Email);
+        item.SubItems.Add(customer.Orders is not null ? customer.Orders.Count().ToString() : "0");
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }
@@ -120,27 +124,29 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Produto" }, new ColumnHeader { Text = "Preço total" },
       new ColumnHeader { Text = "Quantidade" }, new ColumnHeader { Text = "Cliente" },
       new ColumnHeader { Text = "Data do pedido" }, new ColumnHeader { Text = "Data de entrega" },
       new ColumnHeader { Text = "Entregador" }
     };
-    var orderDetails = _databaseContext.OrderDetails;
+    var orderDetails = _appDbContext.OrderDetails.ToList();
 
     listView.Columns.AddRange(columns);
 
-    orderDetails.ForEach(orderDetail => {
-      var item = new ListViewItem(orderDetail.Product.Name);
-      item.SubItems.Add(orderDetail.TotalPrice.ToString("C"));
-      item.SubItems.Add(orderDetail.Quantity.ToString());
-      item.SubItems.Add(orderDetail.Order.Customer.FullName);
-      item.SubItems.Add(orderDetail.Order.OrderDate.ToString("dd/MM/yyyy"));
-      item.SubItems.Add(orderDetail.Order.ShipDate.ToString("dd/MM/yyyy"));
-      item.SubItems.Add(orderDetail.Order.Shipper.CompanyName);
+    orderDetails.ForEach(
+      orderDetail => {
+        var item = new ListViewItem(orderDetail.Product.Name);
+        item.SubItems.Add(orderDetail.TotalPrice.ToString("C"));
+        item.SubItems.Add(orderDetail.Quantity.ToString());
+        item.SubItems.Add(orderDetail.Order.Customer.FullName);
+        item.SubItems.Add(orderDetail.Order.OrderDate.ToString("dd/MM/yyyy"));
+        item.SubItems.Add(orderDetail.Order.ShipDate.ToString("dd/MM/yyyy"));
+        item.SubItems.Add(orderDetail.Order.Shipper.CompanyName);
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }
@@ -151,21 +157,23 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Cliente" }, new ColumnHeader { Text = "Data do pagamento" },
       new ColumnHeader { Text = "Valor" }
     };
-    var payments = _databaseContext.Payments;
+    var payments = _appDbContext.Payments.ToList();
 
     listView.Columns.AddRange(columns);
 
-    payments.ForEach(payment => {
-      var item = new ListViewItem(payment.Customer.FullName);
-      item.SubItems.Add(payment.PaymentDate.ToString("dd/MM/yyyy"));
-      item.SubItems.Add(payment.Amount.ToString("C"));
+    payments.ForEach(
+      payment => {
+        var item = new ListViewItem(payment.Customer is not null ? payment.Customer.FullName : "N/A");
+        item.SubItems.Add(payment.PaymentDate.ToString("dd/MM/yyyy"));
+        item.SubItems.Add(payment.Amount.ToString("C"));
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }
@@ -176,25 +184,27 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Nome" }, new ColumnHeader { Text = "Descrição" },
       new ColumnHeader { Text = "Preço Unitário" }, new ColumnHeader { Text = "Categoria" },
       new ColumnHeader { Text = "Fornecedor" }, new ColumnHeader { Text = "Ativo" }
     };
-    var products = _databaseContext.Products;
+    var products = _appDbContext.Products.ToList();
 
     listView.Columns.AddRange(columns);
 
-    products.ForEach(product => {
-      var item = new ListViewItem(product.Name);
-      item.SubItems.Add(product.Description);
-      item.SubItems.Add(product.UnitPrice.ToString("C"));
-      item.SubItems.Add(product.Category.Name);
-      item.SubItems.Add(product.Supplier.CompanyName);
-      item.SubItems.Add(product.IsActive ? "Sim" : "Não");
+    products.ForEach(
+      product => {
+        var item = new ListViewItem(product.Name);
+        item.SubItems.Add(product.Description);
+        item.SubItems.Add(product.UnitPrice.ToString("C"));
+        item.SubItems.Add(product.Category is not null ? product.Category.Name : "N/A");
+        item.SubItems.Add(product.Supplier is not null ? product.Supplier.CompanyName : "N/A");
+        item.SubItems.Add(product.IsActive ? "Sim" : "Não");
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }
@@ -205,20 +215,22 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Nome" }, new ColumnHeader { Text = "Telefone" }, new ColumnHeader { Text = "Pedidos" }
     };
-    var shippers = _databaseContext.Shippers;
+    var shippers = _appDbContext.Shippers.ToList();
 
     listView.Columns.AddRange(columns);
 
-    shippers.ForEach(shipper => {
-      var item = new ListViewItem(shipper.CompanyName);
-      item.SubItems.Add(shipper.Phone);
-      item.SubItems.Add(shipper.Orders.Count().ToString());
+    shippers.ForEach(
+      shipper => {
+        var item = new ListViewItem(shipper.CompanyName);
+        item.SubItems.Add(shipper.Phone);
+        item.SubItems.Add(shipper.Orders is not null ? shipper.Orders.Count().ToString() : "0");
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }
@@ -229,27 +241,29 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] {
+    var columns = new[] {
       new ColumnHeader { Text = "Nome" }, new ColumnHeader { Text = "Endereço" }, new ColumnHeader { Text = "Cidade" },
       new ColumnHeader { Text = "Estado" }, new ColumnHeader { Text = "CEP" }, new ColumnHeader { Text = "Telefone" },
       new ColumnHeader { Text = "Email" }, new ColumnHeader { Text = "Produtos" }
     };
-    var suppliers = _databaseContext.Suppliers;
+    var suppliers = _appDbContext.Suppliers.ToList();
 
     listView.Columns.AddRange(columns);
 
-    suppliers.ForEach(supplier => {
-      var item = new ListViewItem(supplier.CompanyName);
-      item.SubItems.Add(supplier.Address);
-      item.SubItems.Add(supplier.City);
-      item.SubItems.Add(supplier.State);
-      item.SubItems.Add(supplier.Zip);
-      item.SubItems.Add(supplier.Phone);
-      item.SubItems.Add(supplier.Email);
-      item.SubItems.Add(supplier.Products.Count().ToString());
+    suppliers.ForEach(
+      supplier => {
+        var item = new ListViewItem(supplier.CompanyName);
+        item.SubItems.Add(supplier.Address);
+        item.SubItems.Add(supplier.City);
+        item.SubItems.Add(supplier.State);
+        item.SubItems.Add(supplier.Zip);
+        item.SubItems.Add(supplier.Phone);
+        item.SubItems.Add(supplier.Email);
+        item.SubItems.Add(supplier.Products is not null ? supplier.Products.Count().ToString() : "0");
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }
@@ -260,17 +274,19 @@ public partial class QueryForm : Form {
     listView.Columns.Clear();
     listView.Items.Clear();
 
-    var columns = new[ ] { new ColumnHeader { Text = "Nome" }, new ColumnHeader { Text = "Email" } };
-    var users = _databaseContext.Users;
+    var columns = new[] { new ColumnHeader { Text = "Nome" }, new ColumnHeader { Text = "Email" } };
+    var users = _appDbContext.Users.ToList();
 
     listView.Columns.AddRange(columns);
 
-    users.ForEach(user => {
-      var item = new ListViewItem(user.FullName);
-      item.SubItems.Add(user.Email);
+    users.ForEach(
+      user => {
+        var item = new ListViewItem(user.FullName);
+        item.SubItems.Add(user.Email);
 
-      listView.Items.Add(item);
-    });
+        listView.Items.Add(item);
+      }
+    );
 
     listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
   }

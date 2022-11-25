@@ -1,21 +1,21 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using Challenge02.Database;
-using Challenge02.Entities;
+using Challenge02.Database.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Challenge02.Forms;
 
 public partial class CreateCustomerForm : Form {
+  private readonly AppDbContext _appDbContext;
   private readonly ILogger<CreateCustomerForm> _logger;
-  private readonly DatabaseContext _databaseContext;
 
-  public CreateCustomerForm(ILogger<CreateCustomerForm> logger, DatabaseContext databaseContext) {
+  public CreateCustomerForm(ILogger<CreateCustomerForm> logger, AppDbContext appDbContext) {
     InitializeComponent();
 
     _logger = logger;
-    _databaseContext = databaseContext;
+    _appDbContext = appDbContext;
   }
 
   private void btnCancel_Click(object sender, EventArgs e) {
@@ -26,8 +26,10 @@ public partial class CreateCustomerForm : Form {
   private void btnCreate_Click(object sender, EventArgs e) {
     if (string.IsNullOrWhiteSpace(txtFullName.Text)) {
       _logger.LogWarning("Fullname is empty");
-      MessageBox.Show("O campo 'nome completo' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
-        MessageBoxIcon.Error);
+      MessageBox.Show(
+        "O campo 'nome completo' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
+        MessageBoxIcon.Error
+      );
       return;
     }
 
@@ -35,8 +37,10 @@ public partial class CreateCustomerForm : Form {
 
     if (split.Length < 2) {
       _logger.LogWarning("Fullname is invalid");
-      MessageBox.Show("O campo 'nome completo' deve conter o primeiro e o último nome.", "Erro", MessageBoxButtons.OK,
-        MessageBoxIcon.Error);
+      MessageBox.Show(
+        "O campo 'nome completo' deve conter o primeiro e o último nome.", "Erro", MessageBoxButtons.OK,
+        MessageBoxIcon.Error
+      );
       return;
     }
 
@@ -73,7 +77,7 @@ public partial class CreateCustomerForm : Form {
       return;
     }
 
-    if (_databaseContext.Customers.Any(x => x.Email == txtEmail.Text)) {
+    if (_appDbContext.Customers.Any(x => x.Email == txtEmail.Text)) {
       _logger.LogWarning("Email already exists");
       MessageBox.Show("O email informado já está cadastrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
       return;
@@ -93,7 +97,8 @@ public partial class CreateCustomerForm : Form {
 
     try {
       _logger.LogInformation("Creating customer");
-      _databaseContext.Customers.AddAndSave(customer);
+      _appDbContext.Customers.Add(customer);
+      _appDbContext.SaveChanges();
       MessageBox.Show("Cliente criado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
       txtFullName.Clear();

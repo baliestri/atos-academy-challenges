@@ -1,21 +1,21 @@
-// Copyright (c) Bruno Sales <me@baliestri.dev>.Licensed under the MIT License.
+// Copyright (c) Bruno Sales <me@baliestri.dev>. Licensed under the MIT License.
 // See the LICENSE file in the repository root for full license text.
 
 using Challenge02.Database;
-using Challenge02.Entities;
+using Challenge02.Database.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Challenge02.Forms;
 
 public partial class CreateSupplierForm : Form {
-  private readonly DatabaseContext _databaseContext;
+  private readonly AppDbContext _appDbContext;
   private readonly ILogger<CreateSupplierForm> _logger;
 
-  public CreateSupplierForm(ILogger<CreateSupplierForm> logger, DatabaseContext databaseContext) {
+  public CreateSupplierForm(ILogger<CreateSupplierForm> logger, AppDbContext appDbContext) {
     InitializeComponent();
 
     _logger = logger;
-    _databaseContext = databaseContext;
+    _appDbContext = appDbContext;
   }
 
   private void btnCancel_Click(object sender, EventArgs e) {
@@ -26,15 +26,19 @@ public partial class CreateSupplierForm : Form {
   private void btnCreate_Click(object sender, EventArgs e) {
     if (string.IsNullOrWhiteSpace(txtCompanyName.Text)) {
       _logger.LogWarning("Fullname is empty");
-      MessageBox.Show("O campo 'nome completo' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
-        MessageBoxIcon.Error);
+      MessageBox.Show(
+        "O campo 'nome completo' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
+        MessageBoxIcon.Error
+      );
       return;
     }
 
     if (string.IsNullOrWhiteSpace(txtCompanyName.Text)) {
       _logger.LogWarning("Company name is empty");
-      MessageBox.Show("O campo 'nome da empresa' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
-        MessageBoxIcon.Error);
+      MessageBox.Show(
+        "O campo 'nome da empresa' não pode ser vazio.", "Erro", MessageBoxButtons.OK,
+        MessageBoxIcon.Error
+      );
       return;
     }
 
@@ -42,8 +46,10 @@ public partial class CreateSupplierForm : Form {
 
     if (split.Length < 2) {
       _logger.LogWarning("Fullname is invalid");
-      MessageBox.Show("O campo 'nome completo' deve conter o primeiro e o último nome.", "Erro", MessageBoxButtons.OK,
-        MessageBoxIcon.Error);
+      MessageBox.Show(
+        "O campo 'nome completo' deve conter o primeiro e o último nome.", "Erro", MessageBoxButtons.OK,
+        MessageBoxIcon.Error
+      );
       return;
     }
 
@@ -80,13 +86,13 @@ public partial class CreateSupplierForm : Form {
       return;
     }
 
-    if (_databaseContext.Suppliers.Any(x => x.CompanyName == txtCompanyName.Text)) {
+    if (_appDbContext.Suppliers.Any(x => x.CompanyName == txtCompanyName.Text)) {
       _logger.LogWarning("Company name already exists");
       MessageBox.Show("Já existe um fornecedor com esse nome.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
       return;
     }
 
-    if (_databaseContext.Suppliers.Any(x => x.Email == txtEmail.Text)) {
+    if (_appDbContext.Suppliers.Any(x => x.Email == txtEmail.Text)) {
       _logger.LogWarning("Email already exists");
       MessageBox.Show("O email informado já está cadastrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
       return;
@@ -107,7 +113,8 @@ public partial class CreateSupplierForm : Form {
 
     try {
       _logger.LogInformation("Creating supplier");
-      _databaseContext.Suppliers.AddAndSave(supplier);
+      _appDbContext.Suppliers.Add(supplier);
+      _appDbContext.SaveChanges();
       MessageBox.Show("Fornecedor criado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
       txtCompanyName.Clear();
